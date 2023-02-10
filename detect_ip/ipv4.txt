@@ -1,8 +1,0 @@
-https://api.ipify.org
-http://members.3322.org/dyndns/getip
-http://ifconfig.cc
-http://cip.cc
-https://v6r.ipip.net
-http://whois.pconline.com.cn/ipJson.jsp
-http://v4.myip.la
-http://whatismyip.akamai.com
