@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	i := flag.Int64("timeout", 200, "timeout(ms)")
+	i := flag.Int64("timeout", 5000, "timeout(ms)")
 	flag.Parse()
 
 	timeout := time.Duration(*i) * time.Millisecond
