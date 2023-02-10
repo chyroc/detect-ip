@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -12,8 +13,11 @@ import (
 var regxIPv4 = regexp.MustCompile(`(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)`)
 var regxIPv6 = regexp.MustCompile(`([0-9A-Fa-f]{0,4}:){2,7}([0-9A-Fa-f]{1,4}$|((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4})`)
 
-func DetectIP(httpCli *http.Client, apiServer string, isV6 bool) net.IP {
+func DetectIP(httpCli *http.Client, apiServer string, isV6 bool, isDebug bool) net.IP {
 	statusCode, body, err := fetchURL(httpCli, apiServer)
+	if isDebug {
+		fmt.Printf("'%s' return %d, %s, err=%v\n", apiServer, statusCode, body, err)
+	}
 	if err != nil || statusCode < 200 || statusCode >= 300 || body == "" {
 		return nil
 	}
@@ -22,6 +26,9 @@ func DetectIP(httpCli *http.Client, apiServer string, isV6 bool) net.IP {
 		ipString = regxIPv6.FindString(strings.TrimSpace(body))
 	} else {
 		ipString = regxIPv4.FindString(strings.TrimSpace(body))
+	}
+	if isDebug {
+		fmt.Printf("'%s' return ip=%s\n", apiServer, ipString)
 	}
 	return net.ParseIP(ipString)
 }
@@ -40,7 +47,7 @@ var HttpTestClient = &http.Client{Timeout: time.Second * 5}
 
 func SpeedTest(apiServer string, isV6 bool) (net.IP, time.Duration) {
 	start := time.Now()
-	ip := DetectIP(HttpTestClient, apiServer, isV6)
+	ip := DetectIP(HttpTestClient, apiServer, isV6, false)
 	dur := time.Since(start)
 	return ip, dur
 }

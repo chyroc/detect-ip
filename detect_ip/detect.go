@@ -2,10 +2,13 @@ package detect_ip
 
 import (
 	"net"
+	"os"
 	"sync"
 
 	"github.com/chyroc/detect-ip/internal"
 )
+
+var isDebug = os.Getenv("DEBUG") != ""
 
 func LockIPV4() net.IP {
 	return detectIPByServers(false)
@@ -34,8 +37,11 @@ func detectIPByServers(isV6 bool) net.IP {
 		}
 	}
 	lock := sync.Mutex{}
+	wait := new(sync.WaitGroup)
 	for i := 0; i < 5; i++ {
+		wait.Add(1)
 		go func() {
+			defer wait.Done()
 			select {
 			case <-closed:
 				return
@@ -47,7 +53,7 @@ func detectIPByServers(isV6 bool) net.IP {
 				if nowIndex >= int32(len(apiList)) {
 					return
 				}
-				ip := internal.DetectIP(internal.HttpProdClient, apiList[nowIndex], isV6)
+				ip := internal.DetectIP(internal.HttpProdClient, apiList[nowIndex], isV6, isDebug)
 				if ip == nil {
 					return
 				}
@@ -59,5 +65,6 @@ func detectIPByServers(isV6 bool) net.IP {
 			}
 		}()
 	}
+	wait.Wait()
 	return result
 }
