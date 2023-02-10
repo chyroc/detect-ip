@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
-	"time"
 )
 
 var regxIPv4 = regexp.MustCompile(`(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\.(25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)`)
@@ -40,14 +39,4 @@ func fetchURL(httpCli *http.Client, url string) (int, string, error) {
 	}
 	bs, _ := io.ReadAll(res.Body)
 	return res.StatusCode, string(bs), nil
-}
-
-var HttpProdClient = &http.Client{Timeout: time.Second / 5}
-var HttpTestClient = &http.Client{Timeout: time.Second * 5}
-
-func SpeedTest(apiServer string, isV6 bool) (net.IP, time.Duration) {
-	start := time.Now()
-	ip := DetectIP(HttpTestClient, apiServer, isV6, false)
-	dur := time.Since(start)
-	return ip, dur
 }

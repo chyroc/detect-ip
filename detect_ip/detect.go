@@ -2,23 +2,47 @@ package detect_ip
 
 import (
 	"net"
+	"net/http"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/chyroc/detect-ip/internal"
 )
 
 var isDebug = os.Getenv("DEBUG") != ""
 
-func LockIPV4() net.IP {
-	return detectIPByServers(false)
+type Option struct {
+	timeout time.Duration
 }
 
-func LockIPV6() net.IP {
-	return detectIPByServers(true)
+func WithTimeout(t time.Duration) func(o *Option) {
+	return func(o *Option) {
+		o.timeout = t
+	}
 }
 
-func detectIPByServers(isV6 bool) net.IP {
+func LockIPV4(options ...func(o *Option)) net.IP {
+	opt := makeOption(options)
+	return detectIPByServers(false, opt.timeout)
+}
+
+func LockIPV6(options ...func(o *Option)) net.IP {
+	opt := makeOption(options)
+	return detectIPByServers(true, opt.timeout)
+}
+
+func makeOption(options []func(o *Option)) *Option {
+	o := &Option{
+		timeout: time.Second / 5, // default timeout
+	}
+	for _, v := range options {
+		v(o)
+	}
+	return o
+}
+
+func detectIPByServers(isV6 bool, timeout time.Duration) net.IP {
 	apiList := []string{}
 	if isV6 {
 		apiList = internal.IpV6ApiList.URLs()
@@ -53,7 +77,7 @@ func detectIPByServers(isV6 bool) net.IP {
 				if nowIndex >= int32(len(apiList)) {
 					return
 				}
-				ip := internal.DetectIP(internal.HttpProdClient, apiList[nowIndex], isV6, isDebug)
+				ip := internal.DetectIP(getHttpClient(timeout), apiList[nowIndex], isV6, isDebug)
 				if ip == nil {
 					return
 				}
@@ -67,4 +91,15 @@ func detectIPByServers(isV6 bool) net.IP {
 	}
 	wait.Wait()
 	return result
+}
+
+var httpClientMap = sync.Map{}
+
+func getHttpClient(timeout time.Duration) *http.Client {
+	if v, ok := httpClientMap.Load(timeout); ok {
+		return v.(*http.Client)
+	}
+	client := &http.Client{Timeout: timeout}
+	httpClientMap.Store(timeout, client)
+	return client
 }

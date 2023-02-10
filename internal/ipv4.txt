@@ -1,8 +1,8 @@
-http://whois.pconline.com.cn/ipJson.jsp,114
-http://ifconfig.cc,197
-http://cip.cc,223
-https://v6r.ipip.net,246
-http://whatismyip.akamai.com,525
-http://v4.myip.la,647
-https://api.ipify.org,1397
-http://members.3322.org/dyndns/getip,1608
+http://ifconfig.cc,224
+https://v6r.ipip.net,255
+http://whois.pconline.com.cn/ipJson.jsp,313
+http://cip.cc,607
+http://whatismyip.akamai.com,630
+http://v4.myip.la,701
+https://api.ipify.org,1196
+http://members.3322.org/dyndns/getip,1233

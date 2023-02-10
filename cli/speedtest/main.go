@@ -3,7 +3,10 @@ package main
 import (
 	"io/ioutil"
 	"log"
+	"net"
+	"net/http"
 	"sort"
+	"time"
 
 	"github.com/chyroc/detect-ip/internal"
 )
@@ -15,7 +18,7 @@ func main() {
 
 func speedTestAndWrite(list internal.ApiServerList, isV6 bool, file string) {
 	for _, v := range list {
-		ip, ping := internal.SpeedTest(v.URL, isV6)
+		ip, ping := speedTest(v.URL, isV6)
 		if ip == nil {
 			v.Ping = 0
 		} else {
@@ -28,4 +31,13 @@ func speedTestAndWrite(list internal.ApiServerList, isV6 bool, file string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+}
+
+var httpTestClient = &http.Client{Timeout: time.Second * 5}
+
+func speedTest(apiServer string, isV6 bool) (net.IP, time.Duration) {
+	start := time.Now()
+	ip := internal.DetectIP(httpTestClient, apiServer, isV6, false)
+	dur := time.Since(start)
+	return ip, dur
 }
