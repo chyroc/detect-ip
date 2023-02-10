@@ -1,0 +1,6 @@
+http://speed.neu6.edu.cn/getIP.php
+http://v6.myip.la
+https://api64.ipify.org
+http://ip6only.me/api/
+http://v6.ipv6-test.com/api/myip.php
+https://v6.ident.me
