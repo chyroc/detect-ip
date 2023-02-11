@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+// https://www.sitelike.org/similar/ipify.org/
+
 //go:embed ipv4.txt
 var ipv4 string
 

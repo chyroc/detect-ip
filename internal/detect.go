@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net"
@@ -22,9 +23,9 @@ func DetectIP(httpCli *http.Client, apiServer string, isV6 bool, isDebug bool) n
 	}
 	ipString := ""
 	if isV6 {
-		ipString = regxIPv6.FindString(strings.TrimSpace(body))
+		ipString = regxIPv6.FindString(body)
 	} else {
-		ipString = regxIPv4.FindString(strings.TrimSpace(body))
+		ipString = regxIPv4.FindString(body)
 	}
 	if isDebug {
 		fmt.Printf("'%s' return ip=%s\n", apiServer, ipString)
@@ -33,10 +34,26 @@ func DetectIP(httpCli *http.Client, apiServer string, isV6 bool, isDebug bool) n
 }
 
 func fetchURL(httpCli *http.Client, url string) (int, string, error) {
-	res, err := httpCli.Get(url)
+	req, _ := http.NewRequest(http.MethodGet, url, nil)
+	req.Header.Set("User-Agent", "curl/7.79.1")
+	res, err := httpCli.Do(req)
 	if err != nil {
 		return 0, "", err
 	}
 	bs, _ := io.ReadAll(res.Body)
-	return res.StatusCode, string(bs), nil
+	text := strings.TrimSpace(string(bs))
+
+	if strings.HasPrefix(text, "{") {
+		ipJSON := new(ipJSON)
+		_ = json.Unmarshal(bs, ipJSON)
+		if ipJSON.IP != "" {
+			text = ipJSON.IP
+		}
+	}
+
+	return res.StatusCode, text, nil
+}
+
+type ipJSON struct {
+	IP string `json:"ip"`
 }

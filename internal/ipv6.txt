@@ -4,3 +4,13 @@ http://v6.ipv6-test.com/api/myip.php,854
 https://v6.ident.me,1170
 https://api64.ipify.org,0
 http://ip6only.me/api/,0
+https://ifconfig.co/,
+https://l2.io/ip,
+https://ipapi.co/json,
+https://api6.my-ip.io/ip,
+https://ip.me,
+https://ip6.seeip.org,
+https://ifconfig.io/,
+http://ip6only.me,
+https://ident.me,
+https://ipv6.ip.nf/me.txt,
