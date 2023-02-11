@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
@@ -48,8 +49,10 @@ func speedTestAndWrite(list internal.ApiServerList, isV6 bool, file string) {
 var httpTestClient = &http.Client{Timeout: time.Second * 5}
 
 func speedTest(apiServer string, isV6 bool) (net.IP, time.Duration) {
+	fmt.Printf("[test] start %s, v6=%v\n", apiServer, isV6)
 	start := time.Now()
 	ip := internal.DetectIP(httpTestClient, apiServer, isV6, false)
 	dur := time.Since(start)
+	fmt.Printf("[test] '%s' return %s, dur=%s\n", apiServer, ip.String(), dur.String())
 	return ip, dur
 }
