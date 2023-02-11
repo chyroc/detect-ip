@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/url"
 	"sort"
 	"time"
 
@@ -17,7 +18,18 @@ func main() {
 }
 
 func speedTestAndWrite(list internal.ApiServerList, isV6 bool, file string) {
+	done := map[string]bool{}
 	for _, v := range list {
+		host, err := url.Parse(v.URL)
+		if err != nil {
+			log.Fatalln(err)
+			return
+		}
+		if done[host.String()] {
+			continue
+		}
+		done[host.String()] = true
+
 		ip, ping := speedTest(v.URL, isV6)
 		if ip == nil {
 			v.Ping = 0
