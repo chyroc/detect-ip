@@ -38,8 +38,8 @@ import (
 )
 
 func main() {
-    ip := detect_ip.LockIPV4()
-	// ip := detect_ip.LockIPV4(detect_ip.WithTimeout(time.Second*3))
+    ip := detect_ip.PublicIPV4() // PublicIPV6
+	// ip := detect_ip.PublicIPV4(detect_ip.WithTimeout(time.Second*3))
     fmt.Println(ip)
 }
 ```

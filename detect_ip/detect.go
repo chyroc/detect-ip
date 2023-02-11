@@ -22,12 +22,12 @@ func WithTimeout(t time.Duration) func(o *Option) {
 	}
 }
 
-func LockIPV4(options ...func(o *Option)) net.IP {
+func PublicIPV4(options ...func(o *Option)) net.IP {
 	opt := makeOption(options)
 	return detectIPByServers(false, opt.timeout)
 }
 
-func LockIPV6(options ...func(o *Option)) net.IP {
+func PublicIPV6(options ...func(o *Option)) net.IP {
 	opt := makeOption(options)
 	return detectIPByServers(true, opt.timeout)
 }
