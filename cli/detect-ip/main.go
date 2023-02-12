@@ -15,9 +15,9 @@ func main() {
 	timeout := time.Duration(*i) * time.Millisecond
 
 	start := time.Now()
-	ipv4 := detect_ip.LockIPV4(detect_ip.WithTimeout(timeout))
+	ipv4 := detect_ip.PublicIPV4(detect_ip.WithTimeout(timeout))
 	ipv4Ping := time.Since(start)
-	ipv6 := detect_ip.LockIPV6(detect_ip.WithTimeout(timeout))
+	ipv6 := detect_ip.PublicIPV6(detect_ip.WithTimeout(timeout))
 	ipv6Ping := time.Since(start) - ipv4Ping
 
 	fmt.Printf("ipv4: %s, ping: %s\n", ipv4.String(), ipv4Ping.String())
