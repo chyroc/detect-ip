@@ -40,7 +40,7 @@ func speedTestAndWrite(list internal.ApiServerList, isV6 bool, file string) {
 	}
 	sort.Sort(list)
 
-	err := ioutil.WriteFile(file, []byte(list.ToText()), 0644)
+	err := ioutil.WriteFile(file, []byte(list.ToText()), 0o644)
 	if err != nil {
 		log.Fatalln(err)
 	}

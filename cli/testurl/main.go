@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/chyroc/detect-ip/internal"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/chyroc/detect-ip/internal"
 )
 
 func main() {

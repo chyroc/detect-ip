@@ -62,8 +62,10 @@ func (a ApiServerList) ToText() string {
 	return s.String()
 }
 
-var IpV4ApiList ApiServerList
-var IpV6ApiList ApiServerList
+var (
+	IpV4ApiList ApiServerList
+	IpV6ApiList ApiServerList
+)
 
 func parseApiServer(s string) *ApiServer {
 	s = strings.TrimSpace(s)

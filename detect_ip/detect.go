@@ -53,7 +53,7 @@ func detectIPByServers(isV6 bool, timeout time.Duration) net.IP {
 	closed := make(chan struct{})
 	var result net.IP = nil
 	index := int32(-1)
-	var safeClose = func() {
+	safeClose := func() {
 		select {
 		case <-closed:
 		default:
