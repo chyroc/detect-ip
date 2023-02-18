@@ -22,8 +22,9 @@ go get github.com/chyroc/detect-ip/detect_ip
 
 ```shell
 detect-ip
-
-detect-ip -timeout 3000 # 3000 = 3s
+detect-ip -timeout 3000 # timeout 3s
+detect-ip -timeout 3000 -json # with json output
+detect-ip -timeout 3000 -v4=false # disable ipv4
 ```
 
 - *For Go Package*
